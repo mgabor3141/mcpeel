@@ -21,8 +21,11 @@ git push && github pr --since $(git rev-parse --short HEAD) --wait
 
 ## Status
 
-Early. `github pr <n>` works end-to-end; the rest of the vocabulary is
-designed in [docs/design/github.md](docs/design/github.md).
+Early. The full `github` vocabulary is implemented and verified against the
+GitHub remote MCP on bun and node: pr digest with `--since`/`--wait`,
+prs/issues/runs (failed-job log tails inline), threads/resolve, writes
+(create/edit/comment/merge/close), whoami. Design:
+[docs/design/github.md](docs/design/github.md).
 
 ## Install
 

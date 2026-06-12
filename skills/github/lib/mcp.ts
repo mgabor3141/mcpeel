@@ -31,10 +31,12 @@ export class McpClient {
   #sessionId: string | undefined;
   #initialized = false;
   private cfg: McpConfig;
+  private extraHeaders: Record<string, string>;
 
   // note: no TS "parameter properties" — node's strip-only mode rejects them
-  constructor(cfg: McpConfig) {
+  constructor(cfg: McpConfig, extraHeaders?: Record<string, string>) {
     this.cfg = cfg;
+    this.extraHeaders = extraHeaders ?? {};
   }
 
   async #post(body: object): Promise<RpcResponse | undefined> {
@@ -42,6 +44,7 @@ export class McpClient {
       "Content-Type": "application/json",
       Accept: "application/json, text/event-stream",
       Authorization: `Bearer ${this.cfg.token}`,
+      ...this.extraHeaders,
     };
     if (this.#sessionId) headers["Mcp-Session-Id"] = this.#sessionId;
 
