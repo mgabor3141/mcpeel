@@ -39,6 +39,8 @@ errors that say what to do instead.
 
 These tools are opinionated; the customization mechanism is editing the
 source (e.g. `github.ts`) directly. Keep local edits as a fork, or PR them
-upstream. PRs should show evidence: the agent problem observed (ideally a
+upstream. Each skill folder ships its contract tests (`test.ts`, runs
+against a local mock — no credentials needed); after editing, verify with
+`bun test.ts` (or `node test.ts`) in the skill folder. PRs should show evidence: the agent problem observed (ideally a
 session excerpt) and how the improvement was verified. The metric is
 tokens-per-task and turns-to-success.
