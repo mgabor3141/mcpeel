@@ -42,6 +42,14 @@ function indent(s: string): string {
   return s.replace(/\n/g, "\n    ");
 }
 
+/** Created-entity reporter tolerant of REST/wrapped/GraphQL result shapes. */
+function reportCreated(kind: string, res: any): void {
+  const obj = res?.number !== undefined ? res : res?.issue ?? res?.pull_request ?? res ?? {};
+  const n = obj.number !== undefined ? `#${obj.number}` : "";
+  const url = obj.html_url ?? obj.url ?? "";
+  console.log(`created ${kind} ${n} ${url}`.replace(/\s+/g, " ").trim());
+}
+
 function asArray(x: any, ...keys: string[]): any[] {
   if (Array.isArray(x)) return x;
   for (const k of keys) if (Array.isArray(x?.[k])) return x[k];
@@ -340,7 +348,7 @@ async function prCreate(ctx: Ctx): Promise<void> {
     head, base: (ctx.flags.get("base") as string) ?? "main",
     draft: ctx.flags.has("draft"),
   });
-  console.log(`created #${res.number}: ${res.html_url}`);
+  reportCreated("PR", res);
 }
 
 async function prEdit(ctx: Ctx): Promise<void> {
@@ -453,7 +461,7 @@ async function cmdIssue(ctx: Ctx): Promise<void> {
         method: "create", owner: ctx.owner, repo: ctx.repo, title,
         body: bodyFlag(ctx, false), labels,
       });
-      console.log(`created #${res.number}: ${res.html_url}`);
+      reportCreated("issue", res);
     },
     comment: async () => {
       const n = Number(ctx.pos[1] ?? die("Usage: github issue comment <n> --body <text>"));
