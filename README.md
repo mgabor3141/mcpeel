@@ -1,65 +1,58 @@
 # mcpeel
 
-Porcelain for MCP plumbing: hand-built, token-frugal CLIs for agents.
+Hand-built CLIs over MCP servers — designed for how agents work, not how
+APIs are shaped.
 
-The MCP ecosystem is exploding — there's now a server for almost everything,
-and MCP gateways (like ContextForge) put auth, per-user OAuth, permissions,
-and audit in one place, server-side. That's a huge amount of capability an
-agent could safely reach.
+The MCP ecosystem now has a server for almost everything, and gateways (like
+ContextForge) centralize auth, OAuth, and permissions server-side. But raw
+MCP tools are built for wiring systems together, not for an agent on a task:
+sprawling schemas, API-sized payloads, several calls per question — they
+burn context and add turns.
 
-The catch: raw MCP tools are built for *machines wiring systems together*,
-not for an agent working a task. Their schemas are sprawling, their payloads
-are API-sized, and a single question often takes several calls — so they
-burn context fast and add turns. Pointing an agent straight at a big tool
-surface is expensive and error-prone.
+`mcpeel` is the thin layer in between. Each CLI talks to an MCP endpoint
+(ideally a gateway, so credentials never enter the agent's environment) and
+exposes a small, opinionated command surface designed from real agent
+session data — the common question becomes one short command and a
+~250-token answer. Hand-written and curated, not mechanically generated from
+tool schemas.
 
-`mcpeel` is the thin, hand-cut layer in between. Each CLI talks to an MCP
-endpoint (ideally a gateway, so credentials never enter the agent's
-environment) and exposes a small, opinionated command surface designed from
-real agent session data — so the agent gets the ecosystem's reach **safely**
-(auth and permissions stay server-side) and **context-efficiently** (the
-common question is one short command and a ~250-token answer).
+```mermaid
+flowchart LR
+    A[agent] -->|short command| C["mcpeel CLI<br/>(curates: small surface,<br/>~250-token answers)"]
+    C -->|MCP call, gateway token| G["MCP gateway<br/>(auth, OAuth, permissions)"]
+    G -->|per-user OAuth| S[MCP servers<br/>GitHub, ...]
+    S --> U[(upstream APIs)]
 
-Unlike runtime CLI generators (e.g. `mcp2cli`) that mechanically mirror tool
-schemas — inheriting all the bloat — every command here is hand-written and
-curated for tokens-per-task and turns-to-success.
-
-What that looks like in practice:
-
-- the most common question is the shortest command (`github pr 123` returns
-  metadata + checks + review state + comments in one ~250-token digest)
-- errors teach the correct next action instead of just failing
-- operations better done locally (browsing repo contents) are refused with
-  a redirect to `git clone`
-- `--since <commit>` / `--wait` turn "push and poll for feedback" into a
-  single blocking call
+    subgraph agent_env ["agent environment — no upstream credentials"]
+        A
+        C
+    end
+```
 
 ```sh
+# one digest: metadata + checks + review state + comments
+github pr 123
+# push, then block until CI/review feedback lands
 git push && github pr --since $(git rev-parse --short HEAD) --wait
 ```
 
-## Status
+Errors teach the next action; operations better done locally (browsing repo
+contents) are refused with a redirect to `git clone`.
 
-Early. The full `github` vocabulary is implemented and verified against the
-GitHub remote MCP on bun and node: pr digest with `--since`/`--wait`,
-prs/issues/runs (failed-job log tails inline), threads/resolve, writes
-(create/edit/comment/merge/close), whoami. Design:
-[docs/design/github.md](docs/design/github.md).
-
-## Install
+## Use
 
 Point your agent at `skills/mcpeel/SKILL.md` — setup is agent-driven.
-Requirements: bun (or node ≥22.18) and env vars for your MCP endpoint
-(`MCP_GATEWAY_URL`, `MCP_GATEWAY_TOKEN`).
+Requires bun (or node ≥22.18) and `MCP_GATEWAY_URL` / `MCP_GATEWAY_TOKEN`.
+The CLIs also run as plain scripts anywhere.
 
-Primarily built for skill-aware agent harnesses; the CLIs also work as
-plain scripts anywhere.
+Status: early. The `github` CLI is complete and verified against the GitHub
+remote MCP on bun and node. See [docs/design/github.md](docs/design/github.md).
 
 ## Design
 
 Decisions: [docs/adr/](docs/adr/) · Evidence: [docs/research/](docs/research/)
 
-Contributions must show their work: the observed agent problem (ideally a
+Contributions must show their work — the observed agent problem (ideally a
 session excerpt) and verification of the improvement. The metric is
 tokens-per-task and turns-to-success.
 
