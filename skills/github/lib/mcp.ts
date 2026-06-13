@@ -88,7 +88,7 @@ export class McpClient {
       params: {
         protocolVersion: "2025-03-26",
         capabilities: {},
-        clientInfo: { name: "mcp-cli-ify", version: "0.1" },
+        clientInfo: { name: "mcpeel", version: "0.1" },
       },
     });
     if (res?.error) throw new Error(`MCP initialize failed: ${res.error.message}`);

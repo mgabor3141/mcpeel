@@ -39,4 +39,4 @@ next?" in one call. Prefer it over chaining multiple lookups.
 
 Requires `GITHUB_MCP_URL` + `GITHUB_MCP_TOKEN` (or `MCP_GATEWAY_URL` +
 `MCP_GATEWAY_TOKEN`) in the environment, and bun or node ≥22.18 on PATH.
-See the `mcp-cli-ify` skill for installation.
+See the `mcpeel` skill for installation.

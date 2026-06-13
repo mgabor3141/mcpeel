@@ -1,12 +1,12 @@
 ---
-name: mcp-cli-ify
+name: mcpeel
 description: >
-  Install, update, and configure the mcp-cli-ify tool CLIs (agent-optimized
+  Install, update, and configure the mcpeel tool CLIs (agent-optimized
   CLIs backed by MCP endpoints, e.g. `github`). Use when setting up these
   tools, fixing their configuration, or contributing improvements.
 ---
 
-# mcp-cli-ify (meta)
+# mcpeel (meta)
 
 This repo is a collection of skills, each shipping a small CLI that talks to
 an MCP endpoint (usually an MCP gateway). The CLIs are opinionated and

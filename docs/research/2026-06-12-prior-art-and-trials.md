@@ -51,3 +51,14 @@ Two separate layers: client→gateway JWT/API tokens with RBAC scoping;
 gateway→upstream per-user OAuth (auth-code + PKCE, DCR, tokens encrypted per
 `(gateway, app_user_email)`, auto-refresh). Gaps noted upstream: no admin
 UI for token revocation, cleanup not scheduled.
+
+## Runtime CLI generators vs. hand-built porcelain (naming context)
+
+`knowsuchagency/mcp2cli` and similar (`mcp-cli`, `mcpli`) generate a CLI
+surface mechanically from a server's tool schemas at runtime. That inherits
+the raw tool surface wholesale — exactly the payload/ergonomics problem the
+MCPShim trial exposed above. `mcpeel` is the opposite stance: every command
+is hand-cut from session data, curated for tokens-per-task. This is the
+crisp README differentiator ("not a runtime generator"). Name chosen:
+**mcpeel** ("MCP peel" — a thin hand-cut layer; porcelain for MCP plumbing).
+Faint MCPE (Minecraft Pocket Edition) misread risk noted and accepted.

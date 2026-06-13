@@ -1,6 +1,11 @@
-# mcp-cli-ify
+# mcpeel
 
-CLIs for agents, backed by MCP.
+Porcelain for MCP plumbing: hand-built, token-frugal CLIs for agents.
+
+A thin, hand-cut layer over the raw MCP tool surface. Unlike runtime CLI
+generators (e.g. `mcp2cli`), every command here is hand-written and
+opinionated — shaped from real agent session data, not mechanically
+mirrored from tool schemas.
 
 Each skill in `skills/` ships a small, opinionated CLI that talks to an MCP
 endpoint (ideally an MCP gateway like ContextForge, so auth, filtering, and
@@ -29,7 +34,7 @@ prs/issues/runs (failed-job log tails inline), threads/resolve, writes
 
 ## Install
 
-Point your agent at `skills/mcp-cli-ify/SKILL.md` — setup is agent-driven.
+Point your agent at `skills/mcpeel/SKILL.md` — setup is agent-driven.
 Requirements: bun (or node ≥22.18) and env vars for your MCP endpoint
 (`MCP_GATEWAY_URL`, `MCP_GATEWAY_TOKEN`).
 
