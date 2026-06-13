@@ -36,6 +36,31 @@ github pr 123
 git push && github pr --since $(git rev-parse --short HEAD) --wait
 ```
 
+<details>
+<summary>What <code>github pr 123</code> returns</summary>
+
+```
+#123 Add retry logic to the upload client [OPEN] alice → main (+142 −37, 6 files)
+branch: retry-uploads · created 5h ago · updated 12m ago
+
+Retries transient upload failures with exponential backoff + jitter.
+Caps at 5 attempts; surfaces the last error unchanged. Fixes #118.
+
+checks: 1 failing, 1 pending, 4 ok
+  ✗ unit  run 4821  2 tests failed
+  ○ e2e   run 4823  in_progress
+review: CHANGES_REQUESTED · 2 unresolved threads (github pr threads 123)
+comments (last 2 of 5):
+  bob 41m ago: backoff base looks too aggressive for the 5xx path —
+    can we cap the first sleep at 1s?
+  carol 12m ago: tests are flaky on CI, not your change. re-running.
+```
+
+One call, no pagination, failures sorted first. `--full` expands bodies and
+shows passing checks; `--json` returns the raw data.
+
+</details>
+
 Errors teach the next action; operations better done locally (browsing repo
 contents) are refused with a redirect to `git clone`.
 
@@ -58,4 +83,4 @@ tokens-per-task and turns-to-success.
 
 ## License
 
-Apache-2.0
+MIT
