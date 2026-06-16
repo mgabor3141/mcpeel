@@ -1,5 +1,11 @@
 # mcpeel
 
+> [!NOTE]
+> **Rolled into [hako](https://github.com/mgabor3141/hako) and archived.**
+> These adapters now live in hako (`agent/.agents/skills/`), which is the
+> reference implementation — pull or install them from there. This repo is
+> read-only and kept for history.
+
 Hand-built CLIs over MCP servers — designed for how agents work, not how
 APIs are shaped.
 
